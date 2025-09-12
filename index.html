@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>先生用席申込フォーム</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    html, body { margin:0; height:100%; background:#f4f7fb; font-family:'Noto Sans JP','Montserrat',sans-serif; color:#21323d; }
+    .wrap { display:flex; align-items:center; justify-content:center; height:100%; }
+    .card { background:#fff; padding:32px 28px; border-radius:20px; box-shadow:0 8px 32px rgba(16,210,167,.08), 0 1.5px 6px #b6e8de75; text-align:center; }
+    .title { font-weight:700; letter-spacing:.02em; color:#098678; margin-bottom:8px; }
+    .desc { color:#356860; font-size:1em; }
+    .spinner { width:42px; height:42px; border:3px solid #dff5ef; border-top-color:#10cea7; border-radius:50%; margin:16px auto 0; animation:spin 0.9s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+  <script>
+    window.addEventListener('DOMContentLoaded', function(){
+      setTimeout(function(){ location.href = 'class_selection.html'; }, 300);
+    });
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="title">読み込み中</div>
+      <div class="desc">ページに移動しています…</div>
+      <div class="spinner"></div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>保護者席申込フォーム - 時間帯選択</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Fonts: Noto Sans JP + Montserrat -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #10cea7;
+      --accent-dark: #098678;
+      --bg: #f4f7fb;
+      --card-bg: #fff;
+      --primary-txt: #21323d;
+      --form-border: #bae4d7;
+      --danger: #fd7070;
+      --select: #32ffd5;
+      --disabled: #e2e2e2;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--primary-txt);
+      font-family: 'Noto Sans JP', 'Montserrat', Arial, sans-serif;
+      font-size: 18px;
+      letter-spacing: 0.01em;
+      box-sizing: border-box;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto 24px auto;
+      padding: 0 2vw;
+      box-sizing: border-box;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px 0 rgba(16,210,167,0.08), 0 1.5px 6px #b6e8de75;
+      padding: 40px 28px 32px 28px;
+      margin-bottom: 36px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeInCard 0.7s cubic-bezier(.57,.21,.69,1.25);
+    }
+    @keyframes fadeInCard {
+      0% { opacity: 0; transform: translateY(24px) scale(0.96);}
+      100% { opacity: 1; transform: none;}
+    }
+    .title {
+      font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+      font-size: 2.4em;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-align: center;
+      color: var(--accent-dark);
+      margin-bottom: 0.45em;
+    }
+    .desc {
+      text-align: center;
+      font-size: 1.08em;
+      color: #356860;
+      margin-bottom: 1.7em;
+    }
+    .desc b { color: var(--accent); }
+    .contact {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.96em;
+      margin-bottom: 1.3em;
+      color: var(--accent-dark);
+    }
+    .step-title {
+      font-size: 1.12em;
+      font-weight: 700;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      letter-spacing: .03em;
+      border-left: 5px solid var(--accent);
+      padding-left: 13px;
+    }
+    .timeslot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .timeslot-card {
+      background: #f6fbfa;
+      border: 2px solid var(--form-border);
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+    .timeslot-card:hover {
+      border-color: var(--accent);
+      background: #eafff6;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16,210,167,0.15);
+    }
+    .timeslot-card.selected {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+    }
+    .timeslot-card.selected .timeslot-label {
+      color: white;
+    }
+    .timeslot-label {
+      font-size: 1.1em;
+      font-weight: 600;
+      color: var(--accent-dark);
+      margin-bottom: 8px;
+    }
+    .timeslot-time {
+      font-size: 0.9em;
+      color: #666;
+    }
+    .timeslot-card.selected .timeslot-time {
+      color: rgba(255,255,255,0.8);
+    }
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(90deg,var(--accent-dark) 20%,var(--accent) 80%);
+      color: #fff;
+      font-family: 'Montserrat','Noto Sans JP',sans-serif;
+      font-weight: bold;
+      border: none;
+      border-radius: 13px;
+      font-size: 1.13em;
+      box-shadow: 0 2px 12px #32ffd524;
+      padding: 17px 0;
+      margin: 17px 0 8px 0;
+      letter-spacing: .08em;
+      cursor: pointer;
+      transition: background .13s,transform .13s;
+      display: block;
+    }
+    .submit-btn:disabled {
+      background: #d2efea;
+      color: #fff;
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .result-bar {
+      min-height: 24px;
+      font-size: 1em;
+      margin: 12px 0 0 0;
+      color: var(--accent-dark);
+      text-align: center;
+      font-weight: 600;
+      letter-spacing: .04em;
+    }
+    .loading {
+      text-align: center;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    /* ---------- */
+    @media (max-width: 600px) {
+      html,body {
+        font-size: 16.3px;
+      }
+      .container {
+        max-width: 100vw;
+        padding: 0;
+        margin-top: 14px;
+      }
+      .card {
+        padding: 19px 5vw 20px 5vw;
+        border-radius: 14px;
+        margin-bottom: 16px;
+        box-shadow: 0 3.5px 15px rgba(50,255,213,0.08), 0 1.5px 6px #b6e8de30;
+      }
+      .title {
+        font-size: 1.8em;
+        margin-bottom: 0.58em;
+      }
+      .step-title {
+        font-size: 1em;
+        padding-left: 10px;
+        margin-bottom: 15px;
+        border-left-width: 4px;
+      }
+      .timeslot-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .timeslot-card {
+        padding: 16px;
+      }
+    }
+    @media (max-width: 400px) {
+      html,body {
+        font-size: 15px;
+      }
+      .title { font-size:1.5em;}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card" style="margin-top:0;">
+      <div class="title">先生用席申込フォーム</div>
+      <div class="desc">
+        ご希望の時間帯を選択してください。<br>
+        <b>舞台はA列側</b>です。<br>
+      </div>
+      <div class="contact">
+        <svg width="17" height="17" viewBox="0 0 20 20" fill="none" style="vertical-align:-3px;">
+          <rect x="2.2" y="4" width="15.6" height="12" rx="2.1" stroke="#10cea7" stroke-width="1.3" fill="white"/>
+          <path d="M3 5.15L10 11.1L17 5.15" stroke="#10cea7" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+        </svg>
+        お問合せ：<span>info.engeki5@gmail.com</span>
+      </div>
+      
+      <div class="step-title">ステップ1：時間帯を選択</div>
+      <div id="timeslotContainer" class="loading">
+        時間帯を読み込み中...
+      </div>
+      
+      <button type="button" id="submitBtn" class="submit-btn" disabled>選択した時間帯で申込を開始</button>
+      <div class="result-bar" id="result"></div>
+    </div>
+  </div>
+  
+  <script src="config.js"></script>
+  <script>
+    
+    let selectedTimeslot = null;
+    let timeslots = [];
+    let selectedClass = null;
+    
+
+    // 時間帯一覧を取得
+    function loadTimeslots() {
+      // GASから利用可能な時間帯IDを取得
+      const url = `${GAS_URL}?action=timeslots&callback=handleTimeslots`;
+      
+      // 既存のスクリプトタグを削除
+      const existingScript = document.querySelector('script[src*="action=timeslots"]');
+      if (existingScript) {
+        existingScript.remove();
+      }
+      
+      // JSONPリクエスト
+      const script = document.createElement('script');
+      script.src = url;
+      script.onerror = function() {
+        document.getElementById('timeslotContainer').innerHTML = 
+          '<div style="color: #fd7070; text-align: center;">時間帯の読み込みに失敗しました。ページを再読み込みしてください。</div>';
+      };
+      document.head.appendChild(script);
+    }
+    
+    // 時間帯一覧のコールバック
+    function handleTimeslots(data) {
+      if (data.error) {
+        document.getElementById('timeslotContainer').innerHTML = 
+          `<div style="color: #fd7070; text-align: center;">エラー: ${data.error}</div>`;
+        return;
+      }
+      
+      // GASから取得したIDとフロントエンドの設定をマッチング
+      timeslots = data.map(id => TIMESLOT_CONFIG[id]).filter(config => config);
+      renderTimeslots();
+    }
+    
+    // 時間帯選択UIを描画
+    function renderTimeslots() {
+      const container = document.getElementById('timeslotContainer');
+      container.innerHTML = '<div class="timeslot-grid">';
+      
+      timeslots.forEach(timeslot => {
+        const clsInfo = (typeof CLASS_EVENT_INFO !== 'undefined' && CLASS_EVENT_INFO[selectedClass] && CLASS_EVENT_INFO[selectedClass][timeslot.id]) || null;
+        const timeText = clsInfo ? `${clsInfo.time}` : timeslot.time;
+        const subText = clsInfo ? `${clsInfo.title} / ${clsInfo.play_title}` : '';
+        container.innerHTML += `
+          <div class="timeslot-card" data-timeslot="${timeslot.id}">
+            <div class="timeslot-label">${timeslot.label}</div>
+            <div class="timeslot-time">${timeText}${subText ? '｜' + subText : ''}</div>
+          </div>
+        `;
+      });
+      
+      container.innerHTML += '</div>';
+      
+      // クリックイベントを追加
+      document.querySelectorAll('.timeslot-card').forEach(card => {
+        card.addEventListener('click', function() {
+          // 既存の選択を解除
+          document.querySelectorAll('.timeslot-card').forEach(c => c.classList.remove('selected'));
+          
+          // 新しい選択を設定
+          this.classList.add('selected');
+          selectedTimeslot = this.dataset.timeslot;
+          
+          // ボタンを有効化
+          document.getElementById('submitBtn').disabled = false;
+        });
+      });
+    }
+    
+    // URLパラメータからクラスを取得
+    function getClassFromURL() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('class');
+    }
+
+    // クラスが指定されていない場合はクラス選択ページにリダイレクト
+    function checkClass() {
+      selectedClass = getClassFromURL();
+      if (!selectedClass) {
+        window.location.href = 'class_selection.html';
+        return;
+      }
+    }
+
+    // 申込ページに遷移
+    function proceedToApplication() {
+      if (!selectedTimeslot) {
+        alert('時間帯を選択してください');
+        return;
+      }
+      
+      if (!selectedClass) {
+        alert('クラスが指定されていません');
+        return;
+      }
+      
+      // URLパラメータとしてクラスと時間帯を渡して申込ページに遷移
+      const appUrl = `parent_multi.html?class=${encodeURIComponent(selectedClass)}&timeslot=${encodeURIComponent(selectedTimeslot)}`;
+      window.location.href = appUrl;
+    }
+    
+    // イベントリスナー
+    document.getElementById('submitBtn').addEventListener('click', proceedToApplication);
+    
+    // ページ読み込み時の初期化
+    document.addEventListener('DOMContentLoaded', function() {
+      checkClass();
+      if (selectedClass) {
+        loadTimeslots();
+      }
+    });
+  </script>
+</body>
+</html>
